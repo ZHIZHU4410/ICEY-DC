@@ -1,0 +1,10 @@
+* text=auto
+*.cs text eol=lf
+*.cpp text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+# Preserve the audited source bytes recorded in docs/source-manifest.json.
+src/** -text

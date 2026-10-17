@@ -1,0 +1,97 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using GameWorld;
+using LitJson;
+using UnityEngine;
+using HarmonyLib;
+using System.Collections;
+namespace EarlyPlaytest {
+public sealed class GuestCombat:MonoBehaviour {
+ public static GuestCombat Instance;public const string Contract="FP50-B";
+ public static long IncomingId;public static int IncomingUid;
+ readonly HashSet<int> deaths=new HashSet<int>();
+ readonly Dictionary<int,CombatIdentity> proxies=new Dictionary<int,CombatIdentity>();readonly HashSet<long> received=new HashSet<long>();
+ readonly FrameSlot slot=new FrameSlot(@"Local\IceyDCBridge_FP50_ENEMIES_B");readonly byte[] packet=new byte[FrameSlot.Size];
+ long revision;int generation;StreamWriter log;float next;bool stopped,fixtureApplied;string lastPose="";
+ void Start(){Instance=this;log=new StreamWriter(Path.Combine(InputAction.Out,"combat_guest.csv"));log.AutoFlush=true;log.WriteLine("utc,qpc,lastReadyFrameId,postsolveTickId,generation,eventId,uid,event,hp,energy,pose,result");EventManager.RegisterEvent<EnemyHurtAtkEventArgs>("EnemyHurtAtk",OnNativeHit);}
+ static string Csv(params object[] values){string[] text=new string[values.Length];for(int i=0;i<values.Length;i++)text[i]=Convert.ToString(values[i],CultureInfo.InvariantCulture);return string.Join(",",text);}
+ public void Write(string kind,long id,int uid,string result){if(stopped||log==null)return;var p=R.Player.gameObject;log.WriteLine(Csv(DateTime.UtcNow.ToString("o"),Stopwatch.GetTimestamp(),CpuFrames.LastReadyFrameId,InputAction.Instance.PhysicsTick,generation,id,uid,kind,p==null?0:R.Player.Attribute.currentHP,p==null?0:R.Player.Attribute.currentEnergy,p==null?"":R.Player.Action.stateMachine.currentState,result.Replace(',',';')));}
+ void Update(){if(stopped)return;try{
+  if(Time.realtimeSinceStartup>next){next=Time.realtimeSinceStartup+.02f;if(File.ReadAllText(Path.Combine(InputAction.Out,"control.txt")).Trim()=="stop"){Stop();return;}Refresh();}
+  if(!BridgeArena.Active||R.Player.gameObject==null)return;
+  string pose=R.Player.Action.stateMachine.currentState;if(pose!=lastPose){lastPose=pose;Write("native_pose",InputAction.Instance.Sequence,0,"mask="+InputAction.Instance.CombatMask+" vertical="+InputAction.Instance.CombatVertical+" Invincible="+R.Player.gameObject.GetComponent<PlayerAbilities>().hurt.Invincible+" flashFlag="+R.Player.Attribute.flashFlag);}
+  if(!fixtureApplied&&File.Exists(Path.Combine(InputAction.Out,"unlock_fixture.flag"))){fixtureApplied=true;var enh=R.Player.Enhancement;string[] names={"attack","airAttack","airCombo1","airCombo2","tripleAttack","combo1","combo2","upperChop","bladeStorm","shadeAttack","charging","chase","hitGround","flashAttack","recover"};foreach(string name in names){int before=enh[name];enh[name]=3;Write("fixture_native_enhancement",0,0,name+" before="+before+" runtimeOnly=3; saves guarded");}}
+ }catch(Exception e){Write("FAIL_guest_combat",0,0,e.ToString());Stop();}}
+ void Refresh(){if(!BridgeKeyboard.NativeMode||!BridgeArena.Active||WorldMirror.Instance==null||!WorldMirror.Instance.Active)return;if(!slot.Read(packet,revision))return;revision=BitConverter.ToInt64(packet,8);int g=(int)BitConverter.ToInt64(packet,16),n=BitConverter.ToInt32(packet,24);if(n<0||n>256)throw new InvalidOperationException("Invalid enemy snapshot count");
+  if(g!=WorldMirror.Instance.Generation){Write("rejected_world_generation",revision,0,g.ToString());return;}
+  if(g!=generation){foreach(var p in proxies.Values)Destroy(p.gameObject);proxies.Clear();received.Clear();deaths.Clear();generation=g;}
+  var live=new HashSet<int>();
+  for(int i=0;i<n;i++){int o=FrameSlot.Header+i*72,uid=BitConverter.ToInt32(packet,o),flags=BitConverter.ToInt32(packet,o+4);live.Add(uid);if(!proxies.TryGetValue(uid,out var proxy)){proxy=Create(uid,(flags&1)!=0);proxies.Add(uid,proxy);Write("proxy_create",revision,uid,"Native EnemyHurtBox Collider2D; no renderer or AI");}
+   double x=BitConverter.ToDouble(packet,o+8),y=BitConverter.ToDouble(packet,o+16),radius=BitConverter.ToDouble(packet,o+24),height=BitConverter.ToDouble(packet,o+32);float scale=WorldMirror.Instance.Scale;Vector2 foot=WorldMirror.Instance.FromHost(x,y);proxy.transform.position=new Vector3(foot.x,foot.y,0);proxy.width=Mathf.Max(.1f,(float)(radius*2/24)*scale);proxy.height=Mathf.Max(.1f,(float)(height/24)*scale);proxy.body.size=new Vector2(proxy.width,proxy.height);proxy.body.offset=new Vector2(0,proxy.height*.5f);proxy.hurt.transform.localPosition=Vector3.up*(proxy.height*.5f);proxy.hurt.size=new Vector2(proxy.width,proxy.height);proxy.attr.bounds=proxy.body.bounds;proxy.attr.maxHp=Math.Max(1,BitConverter.ToInt32(packet,o+44));proxy.attr.currentHp=BitConverter.ToInt32(packet,o+40);proxy.attr.faceDir=BitConverter.ToInt32(packet,o+48);proxy.attr.rankType=(EnemyAttribute.RankType)BitConverter.ToInt32(packet,o+52);proxy.attr.inWeakState=(flags&2)!=0;proxy.attr.currentSp=proxy.attr.inWeakState?0:proxy.attr.maxSP;proxy.attr.canBeChased=proxy.attr.inWeakState;proxy.hostLife=BitConverter.ToInt32(packet,o+40);proxy.hurt.enabled=(flags&1)!=0&&proxy.hostLife>0;
+  }
+  var remove=new List<int>();foreach(var pair in proxies)if(!live.Contains(pair.Key)){Write("proxy_remove",revision,pair.Key,"Not in current live snapshot");Destroy(pair.Value.gameObject);remove.Add(pair.Key);}foreach(int uid in remove)proxies.Remove(uid);
+ }
+ CombatIdentity Create(int uid,bool hittable){
+  var go=new GameObject("FP50_DC_UID_"+generation+"_"+uid);go.SetActive(false);go.layer=LayerManager.EnemyLayerID;
+  var identity=go.AddComponent<CombatIdentity>();identity.uid=uid;identity.generation=generation;
+  var rigid=go.AddComponent<Rigidbody2D>();rigid.isKinematic=true;rigid.gravityScale=0;
+  identity.body=go.AddComponent<BoxCollider2D>();identity.body.isTrigger=true;
+  var attr=go.AddComponent<EnemyAttribute>();identity.attr=attr;attr.InTheWorld=hittable;
+  var controller=go.AddComponent<TimeController>();controller.enabled=false;
+  go.AddComponent<StateMachine>();var action=go.AddComponent<CombatProxyAction>();
+  int hurtLayer=LayerMask.NameToLayer("EnemyBody");if(hurtLayer<0)throw new InvalidOperationException("Native EnemyBody collision layer missing");var hurtGO=new GameObject("EnemyHurtBox");hurtGO.transform.parent=go.transform;hurtGO.tag="EnemyHurtBox";hurtGO.layer=hurtLayer;identity.hurt=hurtGO.AddComponent<BoxCollider2D>();identity.hurt.isTrigger=true;identity.hurt.enabled=hittable;action.hurtBox=hurtGO.transform;action.eAttr=attr;
+  hurtGO.AddComponent<HurtCheck>().bodyType=HurtCheck.BodyType.Body;go.AddComponent<CombatProxyHurt>().enabled=false;go.SetActive(true);return identity;
+ }
+ public void SetPlayerMode(bool native){if(!native){foreach(var p in proxies.Values)if(p!=null)Destroy(p.gameObject);proxies.Clear();received.Clear();deaths.Clear();}Write("player_mode",0,0,native?"ICEY":"HERO; native input released; combat proxies removed");}
+ bool OnNativeHit(string name,object sender,EnemyHurtAtkEventArgs args){if(!BridgeKeyboard.NativeMode||args.hurted==null)return true;var identity=args.hurted.GetComponent<CombatIdentity>();if(identity==null)return true;
+  try{
+   if(identity.generation!=generation||generation!=WorldMirror.Instance.Generation){Write("rejected_stale_native_hit",args.attackId,identity.uid,"Generation");return true;}
+   long id=args.hurtType==EnemyHurtAtkEventArgs.HurtTypeEnum.Normal?args.attackId:Incrementor.GetNextId();if(!identity.attacks.Add(id)){Write("duplicate_native_hit",id,identity.uid,args.hurtType.ToString());return true;}
+   int damage;string attack;
+   if(args.hurtType==EnemyHurtAtkEventArgs.HurtTypeEnum.Normal&&args.attackData!=null){attack=args.attackData.atkName;damage=PlayerDamageCalculate.GetFinalDamage(args.attackData.damagePercent,HurtDataTools.GetAtkLevel(attack),attack);}
+   else if(args.hurtType==EnemyHurtAtkEventArgs.HurtTypeEnum.Flash){attack="NativeFlashCounter";damage=identity.attr.rankType==EnemyAttribute.RankType.Normal?identity.hostLife:Math.Max(1,(int)(identity.attr.maxHp*.05f));HurtDataTools.FlashHPRecover();if(R.Player.Enhancement.FlashAttack==3)R.Effect.Generate(127,identity.transform);}
+   else if(args.hurtType==EnemyHurtAtkEventArgs.HurtTypeEnum.Execute){attack="NativeExecute";damage=identity.hostLife;}
+   else{Write("unmapped_native_attack",id,identity.uid,args.hurtType.ToString());return true;}
+   long qpc=Stopwatch.GetTimestamp();InputAction.Instance.wire.Send(string.Join("|",new string[]{"EP4","HIT",Contract,generation.ToString(),id.ToString(),identity.uid.ToString(),damage.ToString(),attack,CpuFrames.LastReadyFrameId.ToString(),InputAction.Instance.PhysicsTick.ToString(),qpc.ToString(),args.hurtType.ToString()}));Write("native_collider_hit",id,identity.uid,"atk="+attack+" damage="+damage+" hurtType="+args.hurtType+" sender="+(args.sender==null?"native_special":args.sender.name)+" hitPos="+args.hurtPos);
+  }catch(Exception e){Write("FAIL_native_hit",args.attackId,identity.uid,e.ToString());}return true;
+ }
+ IEnumerator DeathEnergy(int uid,Vector2 foot){yield return new WaitForSeconds(.8f);if(stopped)yield break;R.Effect.Generate(91,null,new Vector3(foot.x,foot.y+1.2f,LayerManager.ZNum.Fx),Vector3.zero);Write("native_death_energy",0,uid,"Original EnemyBaseHurt GenerateEnergyBall effect91; chips="+UnityEngine.Object.FindObjectsOfType<EnemyChipMove>().Length);}
+ public bool Handle(string[] p){if(p.Length<2)return false;
+  if(p[1]=="MOBDEAD"){if(stopped)return true;try{if(p.Length!=8||p[2]!=Contract||int.Parse(p[3])!=generation){Write("rejected_death_identity",0,0,string.Join("|",p));return true;}int uid=int.Parse(p[4]);if(!deaths.Add(uid))return true;Vector2 foot=WorldMirror.Instance.FromHost(double.Parse(p[5],CultureInfo.InvariantCulture),double.Parse(p[6],CultureInfo.InvariantCulture));StartCoroutine(DeathEnergy(uid,foot));Write("dc_death_received",0,uid,"Native energy resource follows genuine DC Mob.onDie; dcQpc="+p[7]);}catch(Exception e){Write("FAIL_death_energy",0,0,e.ToString());}return true;}
+  if(p[1]!="INCOMING")return false;if(stopped)return true;if(!BridgeKeyboard.NativeMode){Write("rejected_hero_mode_incoming",0,0,"Native player inactive");return true;}try{
+  if(p.Length!=11||p[2]!=Contract){Write("rejected_incoming_contract",0,0,string.Join("|",p));return true;}
+  Refresh();int g=int.Parse(p[3]),uid=int.Parse(p[5]);long id=long.Parse(p[4]);if(g!=generation||g!=WorldMirror.Instance.Generation||!proxies.TryGetValue(uid,out var source)){Write("FAIL_incoming_identity",id,uid,"g="+g+" current="+generation);return true;}int senderUid=int.Parse(p[10]);CombatIdentity sender;if(!proxies.TryGetValue(senderUid,out sender)){Write("FAIL_incoming_sender_identity",id,senderUid,"Owner="+uid);return true;}if(!received.Add(id)){Write("duplicate_incoming",id,uid,"Ignored");return true;}
+  var attr=R.Player.Attribute;int hp=attr.currentHP,energy=attr.currentEnergy;var hurt=R.Player.gameObject.GetComponent<PlayerAbilities>().hurt;bool invincible=hurt.Invincible,flash=attr.flashFlag;double dcDamage=double.Parse(p[6],CultureInfo.InvariantCulture),dcMax=double.Parse(p[7],CultureInfo.InvariantCulture);if(dcMax<=0)throw new InvalidOperationException("Host HP unit invalid");int damage=(int)Math.Ceiling(dcDamage*attr.maxHP/dcMax);
+  var data=new JsonData();data["damagePercent"]=1.0;data["shieldDamage"]=3;data["xSpeed"]=4;data["ySpeed"]=0;data["airXSpeed"]=3;data["airYSpeed"]=5;data["animName"]="UnderAtk1";
+  var args=new PlayerHurtAtkEventArgs(R.Player.gameObject,sender.gameObject,source.gameObject,damage,Incrementor.GetNextId(),data,false);
+  Write("before_native_hurt_event",id,uid,"dcRawDamage="+dcDamage+" nativeDamage="+damage+" invincible="+invincible+" flash="+flash+" dcHitQpc="+p[8]+" senderUid="+senderUid+" nativeOriginUid="+args.origin.GetComponent<CombatIdentity>().uid+" nativeSenderUid="+args.sender.GetComponent<CombatIdentity>().uid);
+  IncomingId=id;IncomingUid=uid;try{EventManager.PostEvent("PlayerHurtAtk",source.gameObject,args);}finally{IncomingId=0;IncomingUid=0;}
+  string result=flash&&R.Player.Enhancement.FlashAttack!=0?"native_flash_counter_window":invincible?"native_invulnerable":attr.currentEnergy<energy?(attr.currentEnergy<=0&&R.Player.Action.stateMachine.currentState.StartsWith("UnderAtk")?"native_shield_break_hurt":"native_shield"):attr.currentHP<hp?"native_hurt":"native_filtered";
+  InputAction.Instance.wire.Send(string.Join("|",new string[]{"EP4","DEFENSE",Contract,generation.ToString(),id.ToString(),uid.ToString(),result,attr.currentHP.ToString(),attr.maxHP.ToString(),(hp-attr.currentHP).ToString(),attr.currentEnergy.ToString(),Stopwatch.GetTimestamp().ToString()}));Write("after_native_hurt_event",id,uid,result+" hpBefore="+hp+" hpAfter="+attr.currentHP+" energyBefore="+energy+" energyAfter="+attr.currentEnergy);
+ }catch(Exception e){Write("FAIL_incoming",0,0,e.ToString());}return true;}
+ void Stop(){if(stopped)return;stopped=true;EventManager.UnregisterEvent<EnemyHurtAtkEventArgs>("EnemyHurtAtk",OnNativeHit);foreach(var p in proxies.Values)if(p!=null)Destroy(p.gameObject);proxies.Clear();slot.Dispose();log?.Dispose();}
+ void OnDestroy(){Stop();Instance=null;}
+ void LateUpdate(){if(stopped||!BridgeArena.Active||R.Player.gameObject==null||Time.frameCount%12!=0||!File.Exists(Path.Combine(InputAction.Out,"collider_trace.flag")))return;string pose=R.Player.Action.stateMachine.currentState;if(!pose.StartsWith("Atk"))return;foreach(var atk in R.Player.gameObject.GetComponentsInChildren<PlayerAtk>(true)){var c=atk.GetComponent<Collider2D>();if(c==null)continue;Write("trace_attack_box",atk.attackId,0,"name="+atk.name+" enabled="+c.enabled+" active="+atk.gameObject.activeInHierarchy+" layer="+LayerMask.LayerToName(atk.gameObject.layer)+" center="+c.bounds.center+" size="+c.bounds.size+" scale="+atk.transform.lossyScale+" data="+(atk.data!=null));foreach(var p in proxies.Values)Write("trace_proxy_box",atk.attackId,p.uid,"enabled="+p.hurt.enabled+" active="+p.hurt.gameObject.activeInHierarchy+" layer="+LayerMask.LayerToName(p.hurt.gameObject.layer)+" center="+p.hurt.bounds.center+" size="+p.hurt.bounds.size+" layerIgnored="+Physics2D.GetIgnoreLayerCollision(c.gameObject.layer,p.hurt.gameObject.layer)+" AabbOverlap="+c.bounds.Intersects(p.hurt.bounds));}}
+}
+public sealed class CombatIdentity:MonoBehaviour {public int uid,generation,hostLife;public float width,height;public EnemyAttribute attr;public BoxCollider2D body,hurt;public readonly HashSet<long> attacks=new HashSet<long>();}
+// These are host-enemy adapters. The real ICEY Player and its abilities are unchanged.
+public sealed class CombatProxyAction:EnemyBaseAction {
+ protected override void Awake(){base.Awake();}protected override void Start(){}protected override void Update(){}
+ public override bool IsInDeadState(string s){return eAttr.isDead;}public override bool IsInWeakSta(){return eAttr.inWeakState;}public override bool IsInAttackState(){return false;}
+ public override void AnimReady(){}public override void AnimMove(){}protected override bool EnterAtkSta(string a,string b){return false;}protected override bool ExitAtkSta(string a,string b){return false;}
+}
+public sealed class CombatProxyHurt:EnemyBaseHurt {
+ protected override void Start(){}protected override void Update(){}private new void OnEnable(){}private new void OnDisable(){}void OnDestroy(){}
+}
+[HarmonyPatch(typeof(PlayerAtk),"OnTriggerEnter2D")]static class NativeColliderTrace{[HarmonyPostfix]static void After(PlayerAtk __instance,Collider2D other){var id=other.GetComponentInParent<CombatIdentity>();if(id!=null)GuestCombat.Instance?.Write("native_trigger_enter",__instance.attackId,id.uid,"tag="+other.tag+" layer="+LayerMask.LayerToName(other.gameObject.layer));}}
+[HarmonyPatch(typeof(PlayerHurtAbility),"PlayeAllHurt")]static class NativeHurtTrace{[HarmonyPrefix]static void Before(PlayerHurtAbility __instance,PlayerHurtAtkEventArgs args){GuestCombat.Instance?.Write("native_hurt_callback_enter",GuestCombat.IncomingId,GuestCombat.IncomingUid,"nativeAtkId="+args.atkId+" Invincible="+__instance.Invincible);}[HarmonyPostfix]static void After(bool __result){GuestCombat.Instance?.Write("native_hurt_callback_return",GuestCombat.IncomingId,GuestCombat.IncomingUid,"accepted="+__result);}}
+[HarmonyPatch(typeof(PlayerHurtAbility),"HurtInDefense")]static class NativeShieldTrace{[HarmonyPostfix]static void After(bool __result){GuestCombat.Instance?.Write("native_shield_callback",GuestCombat.IncomingId,GuestCombat.IncomingUid,"Shield result="+__result);}}
+[HarmonyPatch(typeof(PlayerFlashAttackAbility),"FlashAttack")]static class NativeCounterTrace{[HarmonyPostfix]static void After(GameObject enemy){GuestCombat.Instance?.Write("native_counter_callback",GuestCombat.IncomingId,enemy==null?0:enemy.GetComponent<CombatIdentity>()?.uid??0,"Native FlashAttack called");}}
+
+[HarmonyPatch(typeof(EffectController),"Generate")]static class NativeEffectTrace{[HarmonyPostfix]static void After(int effectId,Transform __result){if(!BridgeArena.Active||__result==null||!File.Exists(Path.Combine(InputAction.Out,"effect_trace.flag")))return;if(effectId==191&&__result.GetComponent<EffectProbe>()==null)__result.gameObject.AddComponent<EffectProbe>();foreach(var renderer in __result.GetComponentsInChildren<Renderer>(true))GuestCombat.Instance?.Write("native_effect_renderer",effectId,0,"effect="+__result.name+" child="+renderer.name+" layer="+LayerMask.LayerToName(renderer.gameObject.layer)+" shader="+(renderer.sharedMaterial==null?"null":renderer.sharedMaterial.shader.name)+" enabled="+renderer.enabled+" active="+renderer.gameObject.activeInHierarchy+" bounds="+renderer.bounds);foreach(var box in __result.GetComponentsInChildren<Collider2D>(true))GuestCombat.Instance?.Write("native_effect_collider",effectId,0,"effect="+__result.name+" child="+box.name+" layer="+LayerMask.LayerToName(box.gameObject.layer)+" enabled="+box.enabled+" active="+box.gameObject.activeInHierarchy+" bounds="+box.bounds);}}
+
+public sealed class EffectProbe:MonoBehaviour {float next;int count;void LateUpdate(){if(Time.realtimeSinceStartup<next)return;next=Time.realtimeSinceStartup+.1f;if(++count>25){Destroy(this);return;}var skill=GetComponent<ShadeAttackSkill>();if(skill!=null)GuestCombat.Instance?.Write("shade_active_state",191,0,"index="+AccessTools.Field(typeof(ShadeAttackSkill),"activeIndex").GetValue(skill)+" time="+AccessTools.Field(typeof(ShadeAttackSkill),"activeTime").GetValue(skill));foreach(var anim in GetComponentsInChildren<SkeletonAnimation>(true)){var mesh=anim.GetComponent<MeshFilter>();GuestCombat.Instance?.Write("shade_live_mesh",191,0,"child="+anim.name+" enabled="+anim.enabled+" active="+anim.gameObject.activeInHierarchy+" valid="+anim.valid+" type="+anim.animPlayType+" anim="+(anim.state==null?"null":anim.AnimationName)+" vertices="+(mesh==null||mesh.sharedMesh==null?0:mesh.sharedMesh.vertexCount)+" bounds="+(mesh==null?new Bounds():mesh.GetComponent<Renderer>().bounds));}foreach(var box in GetComponentsInChildren<Collider2D>(true))GuestCombat.Instance?.Write("shade_live_collider",191,0,"enabled="+box.enabled+" active="+box.gameObject.activeInHierarchy+" layer="+LayerMask.LayerToName(box.gameObject.layer)+" bounds="+box.bounds);}}
+}

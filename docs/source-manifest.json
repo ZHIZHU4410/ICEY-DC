@@ -1,0 +1,197 @@
+{
+  "version": "1.0.3-playtest",
+  "sourceFiles": [
+    {
+      "path": "src/dc/BridgeKeys.cs",
+      "sourceSha256": "519333494332872e4ccd56dfb7ee57e04e100f57272b21d65f27643ab9039226",
+      "publishedSha256": "519333494332872e4ccd56dfb7ee57e04e100f57272b21d65f27643ab9039226",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/CarrierGuard.cs",
+      "sourceSha256": "a691b327ffc4f6378e2c46fbf2715e1aa04df69389719123590ef3df634f8f7e",
+      "publishedSha256": "a691b327ffc4f6378e2c46fbf2715e1aa04df69389719123590ef3df634f8f7e",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/CpuDisplay.cs",
+      "sourceSha256": "f60c4d2abf37739babe232ad16ed14d31c6005c37145c6df2e78563e567305df",
+      "publishedSha256": "b682abecfb0914afcb7973bc6c23ae434bb497c54a04f2c775e99ec49bd01acc",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/dc/DashDisplay.cs",
+      "sourceSha256": "0fe9ca96f4c95775e96878f09d0ef734d61ab292173844d080deb2968feee0c2",
+      "publishedSha256": "ff24a270dd26860340f9493b5b01bfbefe5eff135ed6dfad9abc8b69cf766dac",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/dc/DcInput.cs",
+      "sourceSha256": "39f32c0b9cbe6a7fc6f15e47ae06ee42f3db9e148195ed5953c381610e694cc4",
+      "publishedSha256": "39f32c0b9cbe6a7fc6f15e47ae06ee42f3db9e148195ed5953c381610e694cc4",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/DcInput.csproj",
+      "sourceSha256": "a2100bc9c7276a1894824cdb40333778a6b9a9ed41f7011ef18c014bcf19fc8c",
+      "publishedSha256": "a2100bc9c7276a1894824cdb40333778a6b9a9ed41f7011ef18c014bcf19fc8c",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/HostCombat.cs",
+      "sourceSha256": "39279f5ccc8e28ace88d435fa8add1b8f7fe948c65b9d172f5a1c56e71221295",
+      "publishedSha256": "e4575c35c7ffc65b7c67e86f4e34b1879e9d0bec692ccfab2168790955729ec7",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/dc/HostWorld.cs",
+      "sourceSha256": "bee35864e4539a0ad746104cca9724fb0646c521f5be453750c58d0419e1ef86",
+      "publishedSha256": "b8af5d92944312c308b78f3d05b20cdf96e71f6184e982b6fdbbdd9c83a9eef9",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/dc/HudDisplay.cs",
+      "sourceSha256": "4ae97862a562b91662682b3cfcfa874c7be020b242044238261391d041bec154",
+      "publishedSha256": "4ae97862a562b91662682b3cfcfa874c7be020b242044238261391d041bec154",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/InteractionProbe.cs",
+      "sourceSha256": "1b3d9c747714c9b6c7c5d9d0ec80f64ec22bc8880fd833f3e7cf8c2c7703ee82",
+      "publishedSha256": "1b3d9c747714c9b6c7c5d9d0ec80f64ec22bc8880fd833f3e7cf8c2c7703ee82",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/NativeResolutionWorld.cs",
+      "sourceSha256": "78bf702132a4153833f74d0d9d03df00314bafd48f4cab199321d03b6fa55803",
+      "publishedSha256": "78bf702132a4153833f74d0d9d03df00314bafd48f4cab199321d03b6fa55803",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/PlayerMode.cs",
+      "sourceSha256": "3dc89eda0031db519744372604c1ad1d09d9d48ede38d8bd64267e78da0bc249",
+      "publishedSha256": "3dc89eda0031db519744372604c1ad1d09d9d48ede38d8bd64267e78da0bc249",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/TestHealing.cs",
+      "sourceSha256": "0b1a4ad764de54e2776c317815feb42cf10f404d35ade452671d83f363a319a5",
+      "publishedSha256": "0b1a4ad764de54e2776c317815feb42cf10f404d35ade452671d83f363a319a5",
+      "change": "none"
+    },
+    {
+      "path": "src/dc/TrapFixture.cs",
+      "sourceSha256": "b8534c79ab1417a448699831f3ef4bbe746d476114fa9ab4e35ae80990c18431",
+      "publishedSha256": "b8534c79ab1417a448699831f3ef4bbe746d476114fa9ab4e35ae80990c18431",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/BridgeArena.cs",
+      "sourceSha256": "091b2e5d1dcab37387c43de5eb9c8f36ac0d63f0e3c5b45234aba064a06a6021",
+      "publishedSha256": "091b2e5d1dcab37387c43de5eb9c8f36ac0d63f0e3c5b45234aba064a06a6021",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/BridgeKeyboard.cs",
+      "sourceSha256": "c431a5bc62c88570fa8be344a2956b69af2a7a98d2f5f4d03e702e6c286cd777",
+      "publishedSha256": "c431a5bc62c88570fa8be344a2956b69af2a7a98d2f5f4d03e702e6c286cd777",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/CpuFrames.cs",
+      "sourceSha256": "f2fcccfdf0a4d9e005b6b05a37b3939e915377bf3a27c1cc5f34983f8990a926",
+      "publishedSha256": "f2fcccfdf0a4d9e005b6b05a37b3939e915377bf3a27c1cc5f34983f8990a926",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/DashCapture.cs",
+      "sourceSha256": "665c94194d29aa2cd247fd23821b963723b7efc25c57d6fd42ab2f20c48456a1",
+      "publishedSha256": "665c94194d29aa2cd247fd23821b963723b7efc25c57d6fd42ab2f20c48456a1",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/GuestCombat.cs",
+      "sourceSha256": "bf061f7450a2107bc7697a81460a70a38e29ed54f96d61f020b8cbd358fb3ae7",
+      "publishedSha256": "7ffafbbb29c2120345e4735ddf73560d2d0382965e50fbdb070d3d1f49f4eed2",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/icey/GuestRuntimeTrace.cs",
+      "sourceSha256": "5cd2125e58e6fffc2ea035bd36062b5b517054dd9d9fd6c856762c428a37388b",
+      "publishedSha256": "5cd2125e58e6fffc2ea035bd36062b5b517054dd9d9fd6c856762c428a37388b",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/GuestTestHealing.cs",
+      "sourceSha256": "568b98311379717837d42157f95151c2ba73a7bc3f466f6f62aaa7696de51f17",
+      "publishedSha256": "568b98311379717837d42157f95151c2ba73a7bc3f466f6f62aaa7696de51f17",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/InputAction.cs",
+      "sourceSha256": "2cb41f7215a8b690a1eed4f7aa3050a18bf435adb50a2a7a24744e0af32ab62e",
+      "publishedSha256": "2cb41f7215a8b690a1eed4f7aa3050a18bf435adb50a2a7a24744e0af32ab62e",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/InputAction.csproj",
+      "sourceSha256": "7729bdc1c68f532a9a1b92e5db28800f375209cb203d4701961dfaca4c95deca",
+      "publishedSha256": "60f0a167d83f170694d4f71e3b3cf6bd331642a12bdb3c47cafd08008a0715e7",
+      "change": "parameterize IceyGameDir in project file"
+    },
+    {
+      "path": "src/icey/NativeHud.cs",
+      "sourceSha256": "7f26463b47f98ecbc7eeee0ac67ec8f07e85479517fc21dcbc02f4e7727f4d62",
+      "publishedSha256": "7f26463b47f98ecbc7eeee0ac67ec8f07e85479517fc21dcbc02f4e7727f4d62",
+      "change": "none"
+    },
+    {
+      "path": "src/icey/WorldMirror.cs",
+      "sourceSha256": "da9b9bd5b82837a32c7884bc7771507d4cbe86d23bc3c965139253b4a38f827a",
+      "publishedSha256": "da9b9bd5b82837a32c7884bc7771507d4cbe86d23bc3c965139253b4a38f827a",
+      "change": "none"
+    },
+    {
+      "path": "src/native/ep4_cpu.cpp",
+      "sourceSha256": "f557e8a446f9a4a551b76cb0e1a7fcb8990513d146d02dbcfbc0d4f9f7f60168",
+      "publishedSha256": "f557e8a446f9a4a551b76cb0e1a7fcb8990513d146d02dbcfbc0d4f9f7f60168",
+      "change": "none"
+    },
+    {
+      "path": "src/native/ep5_hud.cpp",
+      "sourceSha256": "be2d42da6d4b4852a0a63cc9ffcb91ca396b71cf339865a653465c7a4371c5a2",
+      "publishedSha256": "be2d42da6d4b4852a0a63cc9ffcb91ca396b71cf339865a653465c7a4371c5a2",
+      "change": "none"
+    },
+    {
+      "path": "src/native/ep6_dash.cpp",
+      "sourceSha256": "d7285af7b3e3738811d96625ce8fbef160e58429e49181c92a432eff691b0fe3",
+      "publishedSha256": "d7285af7b3e3738811d96625ce8fbef160e58429e49181c92a432eff691b0fe3",
+      "change": "none"
+    },
+    {
+      "path": "src/relay.py",
+      "sourceSha256": "1beaa24585456d89968639e8d554789c38c484ee7bb8f3005a0cf12b63bf39c5",
+      "publishedSha256": "1beaa24585456d89968639e8d554789c38c484ee7bb8f3005a0cf12b63bf39c5",
+      "change": "none"
+    },
+    {
+      "path": "src/shared/EpSession.cs",
+      "sourceSha256": "ca9ca6edc996cde1f2da16761bebe9beda36775d406b1520a1dcaba4423ff6f5",
+      "publishedSha256": "bd06541304dfdc8314b8e8d3b77cf44530c02abe273f5be132f9e34c37832730",
+      "change": "trim trailing whitespace / blank EOF; runtime logic unchanged"
+    },
+    {
+      "path": "src/shared/FrameSlot.cs",
+      "sourceSha256": "2668909c8890ff85e54a1c379991f8ffbbc23bd82a46411924692324d82e9736",
+      "publishedSha256": "2668909c8890ff85e54a1c379991f8ffbbc23bd82a46411924692324d82e9736",
+      "change": "none"
+    },
+    {
+      "path": "src/shared/GateWire.cs",
+      "sourceSha256": "9957bb1b5d6f761a71e00d8de737ee6580d5d227c0a1ab2f6d37c6ee0b66b56a",
+      "publishedSha256": "9957bb1b5d6f761a71e00d8de737ee6580d5d227c0a1ab2f6d37c6ee0b66b56a",
+      "change": "none"
+    }
+  ]
+}

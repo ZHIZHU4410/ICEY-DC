@@ -1,0 +1,55 @@
+{
+  "gameVersions": {
+    "ICEY": "Unity 5.4.0f3",
+    "BepInEx": "5.4.23.2",
+    "DeadCells": "35 / 8b5231c",
+    "DCCM": "35.13.8.0"
+  },
+  "originalFiles": [
+    {
+      "game": "ICEY",
+      "relativePath": "ICEY.exe",
+      "expected": "222991c803a16ac95716694133dd78eba116b8907245f79867147a512ef3ef53"
+    },
+    {
+      "game": "ICEY",
+      "relativePath": "ICEY_Data\\globalgamemanagers",
+      "expected": "b0f2b6ad2f43689114207a66fa5e05a85a85f6a33f81e405a7e0220c0a3e1d4b"
+    },
+    {
+      "game": "ICEY",
+      "relativePath": "ICEY_Data\\Managed\\Assembly-CSharp.dll",
+      "expected": "3969f0d5339cef74a12e7c7b11932db727ef1cea5fd83d112dd1acd718a998d7"
+    },
+    {
+      "game": "ICEY",
+      "relativePath": "ICEY_Data\\Managed\\UnityEngine.dll",
+      "expected": "8373002a1c3fcef6c9e611f6b6b232ad972213b14b197ec17a2a6e42dc3ee565"
+    },
+    {
+      "game": "ICEY",
+      "relativePath": "ICEY_Data\\Managed\\Rewired_Core.dll",
+      "expected": "15831c9df7efb116feb9709d535ef11f61c4e1f44d49d94d750c956fef9baa40"
+    },
+    {
+      "game": "DC",
+      "relativePath": "deadcells_gl.exe",
+      "expected": "d29f14e50d0e29217c11309674787411a25aca1696f329dfcb6bab64afb69e0b"
+    },
+    {
+      "game": "DC",
+      "relativePath": "coremod\\core\\host\\startup\\DeadCellsModding.exe",
+      "expected": "d2713f983a8ce161e8e749fa51aa52cde106e22958408f4d46d42f1393b6960f"
+    },
+    {
+      "game": "DC",
+      "relativePath": "coremod\\core\\host\\ModCore.dll",
+      "expected": "dd9ab37cd6e85e8f8335c9b1e52605884da4e3732f7128aa1bcd46c3df5ed8ef"
+    },
+    {
+      "game": "DC",
+      "relativePath": "coremod\\cache\\GameProxy.dll",
+      "expected": "c43b0093390e4ed45276f1b78281f661cafd6c692614ed6beac8bf1dac6d6150"
+    }
+  ]
+}

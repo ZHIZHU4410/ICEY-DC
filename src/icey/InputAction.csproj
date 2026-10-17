@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IceyGameDir Condition="'$(IceyGameDir)' == ''">$(ICEY_GAME_DIR)</IceyGameDir>
+    <TargetFramework>net35</TargetFramework><AssemblyName>IceyEarlyPlaytestAction</AssemblyName><LangVersion>7.3</LangVersion>
+    <NoStdLib>true</NoStdLib><FrameworkPathOverride>$(IceyGameDir)\ICEY_Data\Managed</FrameworkPathOverride>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems><GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath><DebugType>none</DebugType><Deterministic>true</Deterministic>
+    <NoWarn>CS0618;MSB3245;MSB3270</NoWarn>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="*.cs" /><Compile Include="..\shared\*.cs" /></ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\mscorlib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\System.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Core"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\System.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp-firstpass"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Rewired_Core"><HintPath>$(IceyGameDir)\ICEY_Data\Managed\Rewired_Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx"><HintPath>$(IceyGameDir)\BepInEx\core\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(IceyGameDir)\BepInEx\core\0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

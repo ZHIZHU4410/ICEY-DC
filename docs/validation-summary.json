@@ -1,0 +1,41 @@
+{
+  "version": "1.0.3-playtest",
+  "testedDate": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "scope": "one Windows installation; full objective not accepted",
+  "inputEdges": 48,
+  "inputToSoftwarePresentMs": {
+    "n": 48,
+    "p50": 40.86165,
+    "p95": 47.94502,
+    "p99": 60.719637000000006,
+    "max": 62.554
+  },
+  "freshFrameIntervalMs": {
+    "n": 825,
+    "p50": 16.6202,
+    "p95": 21.481039999999997,
+    "p99": 31.996835999999995,
+    "max": 44.044
+  },
+  "inputToNativeAcknowledgedMs": {
+    "n": 48,
+    "p50": 8.02085,
+    "p95": 11.93877,
+    "p99": 25.484865000000028,
+    "max": 37.3761
+  },
+  "notPresented": [],
+  "freshIntervalsOver50": 0,
+  "skippedSourceFrames": 764,
+  "healing": {
+    "before": 83,
+    "after": 250,
+    "max": 250,
+    "energyBefore": 10,
+    "energyAfter": 10,
+    "longHoldSingleRequest": true,
+    "fullHpNoop": true,
+    "pausedRejected": true
+  }
+}
