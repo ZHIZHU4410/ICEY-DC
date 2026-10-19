@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace EarlyPlaytest
 {
-    [BepInPlugin("local.iceydc.earlyplaytest.input.v4","ICEY native action early playtest","1.0.9")]
+    [BepInPlugin("local.iceydc.earlyplaytest.input.v4","ICEY native action early playtest","1.0.10")]
     public sealed class InputAction:BaseUnityPlugin
     {
         public static readonly string Out=EpSession.Output;

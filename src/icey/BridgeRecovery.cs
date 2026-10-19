@@ -19,13 +19,11 @@ static class BridgeLethalRecovery {[HarmonyPostfix]static void After(){BridgeRec
 // They belong to ICEY's screen composition, not to the guest character/effects layer.
 public sealed class CaptureMaskGuard:MonoBehaviour {
  readonly List<Renderer> hidden=new List<Renderer>();
- float nextTrace;
- void OnPreCull(){Restore();if(!BridgeArena.Active)return;
+ float nextTrace;bool fogSaved,oldFog;
+ void OnPreCull(){Restore();if(!BridgeArena.Active)return;oldFog=RenderSettings.fog;fogSaved=true;RenderSettings.fog=false;
   foreach(var mask in UnityEngine.Object.FindObjectsOfType<FullScreenColorMaskController>())foreach(var renderer in mask.GetComponentsInChildren<Renderer>(true))if(renderer.enabled){renderer.enabled=false;hidden.Add(renderer);}
   foreach(var renderer in UnityEngine.Object.FindObjectsOfType<Renderer>()){
    if(!renderer.enabled||!renderer.gameObject.activeInHierarchy)continue;
-   // The charge prefab also contains real animated slash/light sprites. Keep those.
-   // Only its opaque screen-sized Black/White backdrops must stay out of the RGBA export.
    // The separate effect-only capture now exports this whole animation to the viewport.
    // Hide it only from the player/world capture to avoid drawing the same slash twice.
    for(Transform t=renderer.transform;t!=null;t=t.parent)if(t.name.StartsWith("ChargingScreenEffect")){renderer.enabled=false;hidden.Add(renderer);break;}
@@ -34,7 +32,7 @@ public sealed class CaptureMaskGuard:MonoBehaviour {
  }
  void OnPostRender(){Restore();}
  void OnDisable(){Restore();}
- void Restore(){foreach(var renderer in hidden)if(renderer!=null)renderer.enabled=true;hidden.Clear();}
+ void Restore(){if(fogSaved){RenderSettings.fog=oldFog;fogSaved=false;}foreach(var renderer in hidden)if(renderer!=null)renderer.enabled=true;hidden.Clear();}
 }
 // Opt-in runtime probes. Manual sessions never create this command file.
 public sealed class BridgeRegression:MonoBehaviour {

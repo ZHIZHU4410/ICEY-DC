@@ -1,5 +1,5 @@
 {
-  "version": "1.0.9-playtest-candidate",
+  "version": "1.0.10-playtest-candidate",
   "status": "user_gameplay_test_pending",
   "sourceFiles": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "path": "src/dc/DcInput.csproj",
-      "publishedSha256": "22699e24702646f89cec2023f46ecd3e897f5b9f2ce333611ff265ba6a5234b1"
+      "publishedSha256": "1c0fbce6f1f9d53e24a03d0cdd5db5e56fdb0fd202d0f09d17fc35c63525bfdd"
     },
     {
       "path": "src/dc/HostCombat.cs",
@@ -32,7 +32,7 @@
     },
     {
       "path": "src/dc/HostWorld.cs",
-      "publishedSha256": "2b2313dac2809c3e9b6cf2af3c100b92daa1d10eac387ff87d7720c11ec7a2a7"
+      "publishedSha256": "8d25cbd9cc82eca888d60e6baf93e8c1e150aac31494deed151df4551ef1c125"
     },
     {
       "path": "src/dc/HudDisplay.cs",
@@ -44,7 +44,7 @@
     },
     {
       "path": "src/dc/NativeResolutionWorld.cs",
-      "publishedSha256": "8216bf8b9ceb2d4b37eb655b425ede789bbf6f7788b8a8d2951d1aa6995ddfc2"
+      "publishedSha256": "48da03192f52d8ba8c10a06623dd7d4fa6322dd435298e98c0696b63b9066e9b"
     },
     {
       "path": "src/dc/PlayerMode.cs",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/icey/BridgeRecovery.cs",
-      "publishedSha256": "e2a1d17466ffcdc9671b6af35d6a59f30099a114c74774e79e68b0d675a64356"
+      "publishedSha256": "00c8e8e0f5567fc7c1a768c9608c2386bd15e80c763c807ae0c069a0ad5f67c6"
     },
     {
       "path": "src/icey/CpuFrames.cs",
@@ -96,7 +96,7 @@
     },
     {
       "path": "src/icey/InputAction.cs",
-      "publishedSha256": "74a330cac435a69c6af450204e2b017a7314f0e12f4b03af18e072f79a355e79"
+      "publishedSha256": "56ce6951d4bce0b863c4d1f685461261f1f002ebcd868102dc570b1cb55d8481"
     },
     {
       "path": "src/icey/InputAction.csproj",
@@ -149,6 +149,10 @@
     {
       "path": "src/shared/ScreenChargeRules.cs",
       "publishedSha256": "154b15195823c54b3e54ae35fb6f476c270b7275ff78b14b09bd724f40ca4373"
+    },
+    {
+      "path": "src/shared/StandingReference.cs",
+      "publishedSha256": "31386d8f6058d7da0206e115dce3c7ef3c1157e5a0e8116bcb62c8000f2cda70"
     }
   ]
 }

@@ -24,6 +24,6 @@ try{
  }}finally{Pop-Location}
  $artifacts=@('src\icey\bin\Release\IceyEarlyPlaytestAction.dll','src\dc\bin\Release\net10.0\output\IceyEarlyPlaytestInput\IceyEarlyPlaytestInput.dll','out\native\ep4_cpu.dll','out\native\ep5_hud.dll','out\native\ep6_dash.dll')
  $hashes=@();foreach($relative in $artifacts){$hashes+=@{path=$relative;sha256=(Get-FileHash -LiteralPath (Join-Path $RepositoryRoot $relative)).Hash.ToLowerInvariant()}}
- @{utc=[datetime]::UtcNow.ToString('o');version='1.0.9-playtest-candidate';originalFiles=$originals;artifacts=$hashes}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $out 'build-manifest.json') -Encoding UTF8
+ @{utc=[datetime]::UtcNow.ToString('o');version='1.0.10-playtest-candidate';originalFiles=$originals;artifacts=$hashes}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $out 'build-manifest.json') -Encoding UTF8
  Write-Output 'Build completed; five self-authored DLLs ready; nine original fingerprints 9/9. No game deployment.'
 }finally{$env:DCCM_MDK_ROOT=$oldMdk;$env:DCCM_ROOT=$oldRoot;$env:DEAD_CELLS_GAME_PATH=$oldGame;Stop-Transcript|Out-Null}
