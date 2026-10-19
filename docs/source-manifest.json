@@ -1,5 +1,5 @@
 {
-  "version": "1.0.10-playtest-candidate",
+  "version": "1.0.11-playtest-candidate",
   "status": "user_gameplay_test_pending",
   "sourceFiles": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "path": "src/dc/DcInput.csproj",
-      "publishedSha256": "1c0fbce6f1f9d53e24a03d0cdd5db5e56fdb0fd202d0f09d17fc35c63525bfdd"
+      "publishedSha256": "97c24ba1ef7cc310bef15f71e058200c62c015b34004acbd7638e94ae25e7d15"
     },
     {
       "path": "src/dc/HostCombat.cs",
@@ -44,7 +44,7 @@
     },
     {
       "path": "src/dc/NativeResolutionWorld.cs",
-      "publishedSha256": "48da03192f52d8ba8c10a06623dd7d4fa6322dd435298e98c0696b63b9066e9b"
+      "publishedSha256": "d60811bf129d9dfdcf95baca73bb737a1d8dfda6cf8c4a1bd012ebf4b3bf58c8"
     },
     {
       "path": "src/dc/PlayerMode.cs",
@@ -96,7 +96,7 @@
     },
     {
       "path": "src/icey/InputAction.cs",
-      "publishedSha256": "56ce6951d4bce0b863c4d1f685461261f1f002ebcd868102dc570b1cb55d8481"
+      "publishedSha256": "515147d75a1d3bfcf38593e436c115dc8a2219094a2dd4d720b54b636eadec4c"
     },
     {
       "path": "src/icey/InputAction.csproj",

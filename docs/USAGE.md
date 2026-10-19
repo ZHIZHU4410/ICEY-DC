@@ -1,4 +1,4 @@
-当前候选版本 **v1.0.10-playtest-candidate**：改用原生bodyHei解决初始高度采样导致缩小；ICEY绘制时关闭CamFog、深度雾及Unity环境雾。保留全视野蓄力斩击和既有修复。编译、比例回归和校验通过，实机效果待用户手测。详见 [版本记录](release-v1.0.10-candidate.md)。下方旧版记录仅保留历史背景。
+当前候选版本 **v1.0.11-playtest-candidate**：ICEY模式单独隐藏房间地面蓝绿色烟雾层tgSmoke，切回Hero恢复。保留比例修复、全视野蓄力及既有功能。编译与包校验通过，实机效果待用户确认。详见 [版本记录](release-v1.0.11-candidate.md)。下方旧版记录仅保留历史背景。
 
 # 使用、退出和排错
 

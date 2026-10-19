@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>IceyEarlyPlaytestInput</AssemblyName><ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable><ModType>mod</ModType><ModName>IceyEarlyPlaytestInput</ModName><ModMain>EarlyPlaytest.DcInput</ModMain><Version>1.0.10</Version><AutoInstallMod>false</AutoInstallMod><GenerateSinglePakFile>false</GenerateSinglePakFile><GenerateDiffCDB>false</GenerateDiffCDB><GameVersion>35</GameVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup>
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><AssemblyName>IceyEarlyPlaytestInput</AssemblyName><ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable><ModType>mod</ModType><ModName>IceyEarlyPlaytestInput</ModName><ModMain>EarlyPlaytest.DcInput</ModMain><Version>1.0.11</Version><AutoInstallMod>false</AutoInstallMod><GenerateSinglePakFile>false</GenerateSinglePakFile><GenerateDiffCDB>false</GenerateDiffCDB><GameVersion>35</GameVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup>
   <ItemGroup><Compile Include="*.cs"/><Compile Include="..\shared\*.cs"/></ItemGroup>
   <ItemGroup><PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1"/></ItemGroup>
 </Project>
