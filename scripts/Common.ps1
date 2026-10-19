@@ -17,7 +17,7 @@ function Get-VerifiedOriginals($Settings){
   $file=Join-Path $roots[$entry.game] $entry.relativePath
   if(!(Test-Path -LiteralPath $file -PathType Leaf)){throw "Required tested file missing: $file. Install the tested loaders/MDK and run them once to generate their cache."}
   $actual=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
-  if($actual -ne $entry.expected){throw "Unsupported game/loader build: $file. Expected $($entry.expected); found $actual. Use ICEY Unity 5.4.0f3 / BepInEx 5.4.23.2 / DC 35 8b5231c / DCCM 35.13.8.0, or perform compatibility validation. Do not rewrite the baseline to bypass this check."}
+  if($actual -ne $entry.expected){throw "Unsupported game/loader build: $file. Expected $($entry.expected); found $actual. Use ICEY Unity 5.4.0f3 / BepInEx 5.4.23.2 / DC 35 8b5231c / DCCM 35.13.9.0, or perform compatibility validation. Do not rewrite the baseline to bypass this check."}
   $rows+=@{game=$entry.game;relativePath=$entry.relativePath;expected=$entry.expected}
  }
  if($rows.Count -ne 9){throw 'Expected exactly nine original fingerprints'}

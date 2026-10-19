@@ -17,7 +17,7 @@ def client(s):
                     if role not in ['DC','ICEY']:break
                     with lock:roles[role]=s
                 if p[1]!='SAMPLE':record(role,line)
-                if (role=='DC' and p[1] in ('INPUT','INCOMING','MOBDEAD','MODE','TESTHEAL')) or (role=='ICEY' and p[1] in ('HIT','DEFENSE','KEYMAP','HEALED')):
+                if (role=='DC' and p[1] in ('INPUT','INCOMING','MOBDEAD','MODE','TESTHEAL')) or (role=='ICEY' and p[1] in ('HIT','DEFENSE','KEYMAP','HEALED','CHARGE')):
                     with lock:target=roles.get('ICEY' if role=='DC' else 'DC')
                     if target:target.sendall((line+'\n').encode('ascii'))
     except (OSError,ValueError) as error:record(role,'ERROR '+str(error))
@@ -26,7 +26,17 @@ def client(s):
             if roles.get(role) is s:roles.pop(role,None)
         s.close()
 server=socket.socket();server.bind(('127.0.0.1',42250));server.listen(4)
+server.settimeout(.25)
 (out/'relay_pid.txt').write_text(str(os.getpid()),encoding='ascii')
 record('SERVER','START 127.0.0.1:42250')
-while True:
-    s,_=server.accept();threading.Thread(target=client,args=(s,),daemon=True).start()
+try:
+    while True:
+        try:
+            if (out/'control.txt').read_text(encoding='utf-8-sig').strip()=='stop':break
+        except FileNotFoundError:pass
+        try:s,_=server.accept()
+        except socket.timeout:continue
+        threading.Thread(target=client,args=(s,),daemon=True).start()
+finally:
+    server.close()
+    record('SERVER','STOP control; listener released')

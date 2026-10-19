@@ -3,7 +3,7 @@
     "ICEY": "Unity 5.4.0f3",
     "BepInEx": "5.4.23.2",
     "DeadCells": "35 / 8b5231c",
-    "DCCM": "35.13.8.0"
+    "DCCM": "35.13.9.0"
   },
   "originalFiles": [
     {
@@ -39,17 +39,17 @@
     {
       "game": "DC",
       "relativePath": "coremod\\core\\host\\startup\\DeadCellsModding.exe",
-      "expected": "d2713f983a8ce161e8e749fa51aa52cde106e22958408f4d46d42f1393b6960f"
+      "expected": "dc040692a0a92e1d7410423a82196680042c485e26309d26a595919cd011a744"
     },
     {
       "game": "DC",
       "relativePath": "coremod\\core\\host\\ModCore.dll",
-      "expected": "dd9ab37cd6e85e8f8335c9b1e52605884da4e3732f7128aa1bcd46c3df5ed8ef"
+      "expected": "3c80e20a862586adf2a8e899de49ca28e3a621ff5d8f8c078fdbc7e150249a11"
     },
     {
       "game": "DC",
       "relativePath": "coremod\\cache\\GameProxy.dll",
-      "expected": "c43b0093390e4ed45276f1b78281f661cafd6c692614ed6beac8bf1dac6d6150"
+      "expected": "c51cf932092d904c6d44ddda3fa12bff4eb43bb8b0d14d174e9b82aa13520bf3"
     }
   ]
 }
